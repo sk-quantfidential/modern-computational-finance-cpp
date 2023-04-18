@@ -1,0 +1,180 @@
+# Temp files
+.DS_Store
+*~
+*#
+.#*
+.*.swp
+*.tmp
+*.log
+
+# Build files
+*/dist/
+**/build/
+**/dist/
+**/target/
+**/Debug/
+**/Release/
+**/DEBUG/
+**/RELEASE/
+**/out/
+**/log/
+**/classes/
+**/war/
+*.[oa]
+
+# tarballs, etc
+*.html
+*.tar*
+*.zip
+
+# C/C++
+*.o
+*.la
+*.dylib
+*.so*
+*.a
+.deps
+*.lo
+*.gcno
+*.gcda
+
+# Python
+__pycache__
+*.pyc
+*.pyd
+
+# Haskell
+*.hi
+
+# Scala
+**/.cache_main
+
+# Latex files
+*.aux
+*.blg
+*.idx
+*.ilg
+*.ind
+*.out
+*.pdf
+*.toc
+*.err
+**/auto/
+
+# Jupyter
+**/.ipynb_checkpoints/*
+
+# Rstudio
+**/cache/*
+*.synctex.gz
+
+# Eclipse
+**/.cache
+**/.cache-main
+**/.settings
+**/.classpath
+**/.project
+**/.pydevproject
+**/.metadata/
+*workspace/
+
+# Netbeans
+**/.dep.inc
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+
+#
+**/.svn/
+*_local/
+
+# Ensime
+**/.ensime
+**/.ensime_cache
+
+# IntelliJ
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff:
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+
+# Sensitive or high-churn files:
+**/.idea/dataSources/
+**/.idea/dataSources.ids
+**/.idea/dataSources.xml
+**/.idea/dataSources.local.xml
+**/.idea/sqlDataSources.xml
+**/.idea/dynamic.xml
+**/.idea/uiDesigner.xml
+
+# Gradle:
+**/.idea/gradle.xml
+**/.idea/libraries
+
+# Mongo Explorer plugin:
+**/.idea/mongoSettings.xml
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+**/out/
+
+# mpeltonen/sbt-idea plugin
+**/.idea_modules/
+
+# JIRA plugin
+**/atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+**/com_crashlytics_export_strings.xml
+**/crashlytics.properties
+**/crashlytics-build.properties
+**/fabric.properties
+
+### Intellij Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+# *.iml
+# modules.xml
+# **/.idea/misc.xml
+# **/*.ipr
+/javaQuantAnalysis/nbproject/
+
+## Autotools
+/autom4te.cache/
+/config/
+Makefile
+Makefile.in
+aclocal.m4
+app.info
+compile
+config.h
+config.h.in
+config.log
+config.status
+configure
+configure.scan
+coverage_report
+depcomp
+install-sh
+libtool
+m4
+missing
+stamp-h1
+
+# Visual Studio
+**/.vs/*
+**/obj/*
+**/bin/*
+**/packages/*
+ipch/
+*.apps
+*.nbc
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
