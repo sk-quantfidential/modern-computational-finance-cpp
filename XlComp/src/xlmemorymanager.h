@@ -9,11 +9,9 @@
 //
 ///***************************************************************************
 
-#pragma once
-
 #ifdef __cplusplus
 
-#include "xlMemoryPool.h"
+#include "xlmemorypool.h"
 
 //
 // Total number of memory allocation pools to manage
@@ -29,7 +27,7 @@ public:
 
 	static MemoryManager* GetManager();
 
-	LPSTR CPP_GetTempMemory(int cByte);
+	LPSTR CPP_GetTempMemory(size_t cByte);
 	void CPP_FreeAllTempMemory();
 
 private:
@@ -52,7 +50,7 @@ private:
 extern "C"
 {
 #endif
-	LPSTR MGetTempMemory(int cByte);
+	LPSTR MGetTempMemory(size_t cByte);
 	void MFreeAllTempMemory();
 #ifdef __cplusplus
 }

@@ -4,7 +4,7 @@
 
 //  General interface for ranges with strings
 
-#include "xlcall.h"
+#include <xlcall.h>
 #include "xlframework.h"
 #include <string>
 using namespace std;
@@ -208,6 +208,41 @@ LPXLOPER12 from_strVector(const vector<string>& strv, const bool rowVector = tru
     {
         return *TempStr12(s);
     });
+
+    return oper;
+}
+
+LPXLOPER12 from_dblVector(const vector<double>& v, const bool rowVector = true)
+{
+    LPXLOPER12 oper = TempXLOPER12();
+    oper->xltype = xltypeMulti;
+    oper->val.array.rows = rowVector ? v.size() : 1;
+    oper->val.array.columns = rowVector ? 1 : v.size();
+    oper->val.array.lparray = (LPXLOPER12)GetTempMemory(v.size() * sizeof(XLOPER12));
+    transform(v.begin(), v.end(), oper->val.array.lparray,
+        [](const double d)
+        {
+            return *TempNum12(d);
+        });
+
+    return oper;
+}
+
+LPXLOPER12 from_labelsAndStrings(const vector<string>& labels, const vector<string>& values)
+{
+    const size_t n = labels.size();
+    if (n == 0 || n != values.size()) return TempErr12(xlerrNA);
+    LPXLOPER12 oper = TempXLOPER12();
+    oper->xltype = xltypeMulti;
+    oper->val.array.rows = n;
+    oper->val.array.columns = 2;
+    oper->val.array.lparray = (LPXLOPER12)GetTempMemory(2 * n * sizeof(XLOPER12));
+
+    for (size_t i = 0; i < n; ++i)
+    {
+        oper->val.array.lparray[2 * i] = *TempStr12(labels[i]);
+        oper->val.array.lparray[2 * i + 1] = *TempStr12(values[i]);
+    }
 
     return oper;
 }

@@ -10,14 +10,13 @@
 //
 ///***************************************************************************
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 //
 // Total amount of memory to allocate for all temporary XLOPERs
 //
 
-#define MEMORYSIZE  4194304
+#define MEMORYSIZE 10240
 
 class MemoryPool
 {
@@ -25,10 +24,10 @@ public:
 	MemoryPool(void);
 	~MemoryPool(void);
 	void ClearPool(void);
-	LPSTR GetTempMemory(int cBytes);
+	LPSTR GetTempMemory(size_t cBytes);
 	void FreeAllTempMemory();
 
 	DWORD m_dwOwner;			// ID of ownning thread
 	char* m_rgchMemBlock;		// Memory for temporary XLOPERs
-	int m_ichOffsetMemBlock;	// Offset of next memory block to allocate
+	size_t m_ichOffsetMemBlock;	// Offset of next memory block to allocate
 };

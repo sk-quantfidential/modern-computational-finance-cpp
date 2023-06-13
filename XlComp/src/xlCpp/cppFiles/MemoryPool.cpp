@@ -52,7 +52,7 @@ void MemoryPool::ClearPool(void)
 // is not allowed, this method will return 0. Can be called
 // and used exactly as malloc().
 //
-LPSTR MemoryPool::GetTempMemory(int cBytes)
+LPSTR MemoryPool::GetTempMemory(size_t cBytes)
 {
 	LPSTR lpMemory;
 

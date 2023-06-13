@@ -31,7 +31,7 @@ MemoryManager* vpmm;
 //
 // See MemoryPool.h for more details
 //
-LPSTR MGetTempMemory(int cByte)
+LPSTR MGetTempMemory(size_t cByte)
 {
 	return MemoryManager::GetManager()->CPP_GetTempMemory(cByte);
 }
@@ -95,7 +95,7 @@ MemoryManager::~MemoryManager(void)
 // thread for a set number of bytes.  Returns 0 if there was a
 // failure in getting the memory.
 //
-LPSTR MemoryManager::CPP_GetTempMemory(int cByte)
+LPSTR MemoryManager::CPP_GetTempMemory(size_t cByte)
 {
 	DWORD dwThreadID;
 	MemoryPool* pmp;
@@ -184,8 +184,10 @@ void MemoryManager::GrowPools()
 	MemoryPool* rgmpTemp;
 	MemoryPool* pmpDst;
 	MemoryPool* pmpSrc;
-	int i;
 
+	int i, impMaxNew;
+
+	impMaxNew = 2*m_impMax;
 	pmpDst = rgmpTemp = new MemoryPool[2*m_impMax];
 	pmpSrc = m_rgmp;
 
@@ -200,4 +202,5 @@ void MemoryManager::GrowPools()
 	}
 	delete [] m_rgmp;
 	m_rgmp = rgmpTemp;
+	m_impMax = impMaxNew;
 }
