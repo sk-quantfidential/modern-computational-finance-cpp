@@ -101,10 +101,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;XLCOMP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\INCLUDE;C:\Users\stuar\AppData\Local\Programs\Python\Python310-32\include;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\LIB;C:\Users\stuar\AppData\Local\Programs\Python\Python310-32\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xlcall32.lib;python310_d.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,10 +118,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;XLCOMP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\INCLUDE;C:\Users\stuar\AppData\Local\Programs\Python\Python310\include;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\LIB\x64;C:\Users\stuar\AppData\Local\Programs\Python\Python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xlcall32.lib;python310_d.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,6 +148,7 @@
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
       <AdditionalOptions>/Zo /Qvec-report:1 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\INCLUDE;C:\Users\stuar\AppData\Local\Programs\Python\Python310-32\include;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +157,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <Profile>true</Profile>
+      <AdditionalLibraryDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\LIB;C:\Users\stuar\AppData\Local\Programs\Python\Python310-32\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xlcall32.lib;python310.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,6 +171,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;XLCOMP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\INCLUDE;C:\Users\stuar\AppData\Local\Programs\Python\Python310\include;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,6 +179,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
+      <AdditionalLibraryDirectories>C:\2013 Office System Developer Resources\Excel2013XLLSDK\LIB\x64;C:\Users\stuar\AppData\Local\Programs\Python\Python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xlcall32.lib;python310.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -180,6 +192,7 @@
     <ClInclude Include="analytics.h" />
     <ClInclude Include="blocklist.h" />
     <ClInclude Include="ConcurrentQueue.h" />
+    <ClInclude Include="exports.h" />
     <ClInclude Include="interp.h" />
     <ClInclude Include="ivs.h" />
     <ClInclude Include="main.h" />
@@ -198,17 +211,17 @@
     <ClInclude Include="store.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="utility.h" />
-    <ClInclude Include="xlcall.h" />
     <ClInclude Include="xlOper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AAD.cpp" />
     <ClCompile Include="sobol.cpp" />
     <ClCompile Include="mcBase.cpp" />
+    <ClCompile Include="xlcall.cpp" />
+    <ClCompile Include="xlframework.c" />
     <ClCompile Include="xlMemoryManager.cpp" />
     <ClCompile Include="xlMemoryPool.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
-    <ClCompile Include="xlcall.cpp" />
     <ClCompile Include="xlExport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

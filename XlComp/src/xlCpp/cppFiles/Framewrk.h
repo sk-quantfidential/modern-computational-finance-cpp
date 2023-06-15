@@ -31,7 +31,6 @@ extern "C" {
 	void far cdecl debugPrintf(LPSTR lpFormat, ...);
 	LPSTR GetTempMemory(size_t cBytes);
 	void FreeAllTempMemory(void);
-#ifdef _old_excel_sdk
 	int cdecl Excel(int xlfn, LPXLOPER pxResult, int count, ...);
 	LPXLOPER TempNum(double d);
 	LPXLOPER TempStr(LPSTR lpstr);
@@ -43,7 +42,6 @@ extern "C" {
 	LPXLOPER TempActiveColumn(BYTE col);
 	LPXLOPER TempErr(WORD i);
 	LPXLOPER TempMissing(void);
-#endif /* _old_excel_sdk */
 	void InitFramework(void);
 	void QuitFramework(void);
 
@@ -60,16 +58,12 @@ extern "C" {
 	LPXLOPER12 TempMissing12(void);
 	int cdecl Excel12f(int xlfn, LPXLOPER12 pxResult, int count, ...);
 
-#ifdef _old_excel_sdk
 	void FreeXLOperT(LPXLOPER pxloper);
-#endif /* _old_excel_sdk */
 	void FreeXLOper12T(LPXLOPER12 pxloper12);
 	BOOL ConvertXLRefToXLRef12(LPXLREF pxref, LPXLREF12 pxref12);
 	BOOL ConvertXLRef12ToXLRef(LPXLREF12 pxref12, LPXLREF pxref);
-#ifdef _old_excel_sdk
 	BOOL XLOperToXLOper12(LPXLOPER pxloper, LPXLOPER12 pxloper12);
 	BOOL XLOper12ToXLOper(LPXLOPER12 pxloper12, LPXLOPER pxloper);
-#endif /* _old_excel_sdk */
 
 #ifdef __cplusplus
 }

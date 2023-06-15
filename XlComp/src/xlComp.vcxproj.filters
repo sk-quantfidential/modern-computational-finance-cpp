@@ -11,9 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="xlcall.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -95,11 +92,11 @@
     <ClInclude Include="utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="exports.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="xlcall.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="xlExport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -119,6 +116,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlframework.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xlcall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
