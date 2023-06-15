@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 
+#include <string>
+
+#include "..\CompFinanceLib\src\exports.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestComputationFinance

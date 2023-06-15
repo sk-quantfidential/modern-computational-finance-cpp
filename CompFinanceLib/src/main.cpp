@@ -23,27 +23,21 @@ As long as this comment is preserved at the top of the file
 #include "mcPrd.h"
 #include "mrg32k3a.h"
 #include "sobol.h"
+#include <string>
+#include <vector>
 #include <numeric>
 #include <fstream>
 using namespace std;
 
-#include "store.h"
+#include "exports.hpp"
 
-struct NumericalParam
-{
-    bool              parallel;
-    bool              useSobol;
-    int               numPath;
-    int               seed1 = 12345;
-    int               seed2 = 1234;
-};
-
+/*
 //  Price product in model
 inline auto value(
-    const Model<double>&    model,
-    const Product<double>&  product,
+    const Model<double>& model,
+    const Product<double>& product,
     //  numerical parameters
-    const NumericalParam&   num)
+    const NumericalParam& num)
 {
     //  Random Number Generator
     unique_ptr<RNG> rng;
@@ -56,11 +50,7 @@ inline auto value(
         : mcSimul(product, model, *rng, num.numPath);
 
     //  We return 2 vectors : the payoff identifiers and their values
-    struct
-    {
-        vector<string> identifiers;
-        vector<double> values;
-    } results;
+    ValueResults results;
 
     const size_t nPayoffs = product.payoffLabels().size();
     results.identifiers = product.payoffLabels();
@@ -74,13 +64,13 @@ inline auto value(
 
     return results;
 }
-
+*/
 //  Overload that picks product and model by name in the store
-inline auto value(
-    const string&           modelId,
-    const string&           productId,
+ValueResults simValue(
+    const string& modelId,
+    const string& productId,
     //  numerical parameters
-    const NumericalParam&   num)
+    const NumericalParam& num)
 {
     //  Get model and product
     const Model<double>* model = getModel<double>(modelId);
@@ -95,11 +85,11 @@ inline auto value(
 }
 
 //  AAD risk, one payoff
-inline auto AADriskOne(
-    const string&           modelId,
-    const string&           productId,
-    const NumericalParam&   num,
-    const string&           riskPayoff = "")
+RiskPayoffResults AADriskOne(
+    const string& modelId,
+    const string& productId,
+    const NumericalParam& num,
+    const string& riskPayoff)
 {
     //  Get model and product
     const Model<Number>* model = getModel<Number>(modelId);
@@ -135,19 +125,13 @@ inline auto AADriskOne(
         : mcSimulAAD(*product, *model, *rng, num.numPath,
             [riskPayoffIdx](const vector<Number>& v) {return v[riskPayoffIdx]; });
 
+
     //  We return: a number and 2 vectors : 
     //  -   The payoff identifiers and their values
     //  -   The value of the aggreagte payoff
     //  -   The parameter idenitifiers 
     //  -   The sensititivities of the aggregate to parameters
-    struct
-    {
-        vector<string>  payoffIds;
-        vector<double>  payoffValues;
-        double          riskPayoffValue;
-        vector<string>  paramIds;
-        vector<double>  risks;
-    } results;
+    RiskPayoffResults results;
 
     const size_t nPayoffs = product->payoffLabels().size();
     results.payoffIds = product->payoffLabels();
@@ -155,8 +139,8 @@ inline auto AADriskOne(
     for (size_t i = 0; i < nPayoffs; ++i)
     {
         results.payoffValues[i] = accumulate(
-            simulResults.payoffs.begin(), 
-            simulResults.payoffs.end(), 
+            simulResults.payoffs.begin(),
+            simulResults.payoffs.end(),
             0.0,
             [i](const double acc, const vector<double>& v) { return acc + v[i]; }
         ) / num.numPath;
@@ -166,17 +150,17 @@ inline auto AADriskOne(
         simulResults.aggregated.end(),
         0.0) / num.numPath;
     results.paramIds = model->parameterLabels();
-    results.risks = move (simulResults.risks);
+    results.risks = move(simulResults.risks);
 
     return results;
 }
 
 //  AAD risk, aggregate portfolio
-inline auto AADriskAggregate(
-    const string&           modelId,
-    const string&           productId,
-    const map<string, double>&   notionals,
-    const NumericalParam&   num)
+RiskPayoffResults AADriskAggregate(
+    const string& modelId,
+    const string& productId,
+    const map<string, double>& notionals,
+    const NumericalParam& num)
 {
     //  Get model and product
     const Model<Number>* model = getModel<Number>(modelId);
@@ -221,14 +205,7 @@ inline auto AADriskAggregate(
     //  -   The value of the aggreagte payoff
     //  -   The parameter idenitifiers 
     //  -   The sensititivities of the aggregate to parameters
-    struct
-    {
-        vector<string>  payoffIds;
-        vector<double>  payoffValues;
-        double          riskPayoffValue;
-        vector<string>  paramIds;
-        vector<double>  risks;
-    } results;
+    RiskPayoffResults results;
 
     const size_t nPayoffs = product->payoffLabels().size();
     results.payoffIds = product->payoffLabels();
@@ -252,23 +229,12 @@ inline auto AADriskAggregate(
     return results;
 }
 
-//  Returns a vector of values and a matrix of risks 
-//      with payoffs in columns and parameters in rows
-//      along with ids of payoffs and parameters
-
-struct RiskReports
-{
-    vector<string> payoffs;
-    vector<string> params;
-    vector<double> values;
-    matrix<double> risks;
-};
 
 //  Itemized AAD risk, one per payoff
-inline RiskReports AADriskMulti(
-    const string&           modelId,
-    const string&           productId,
-    const NumericalParam&   num)
+RiskReports AADriskMulti(
+    const string& modelId,
+    const string& productId,
+    const NumericalParam& num)
 {
     const Model<Number>* model = getModel<Number>(modelId);
     const Product<Number>* product = getProduct<Number>(productId);
@@ -278,6 +244,9 @@ inline RiskReports AADriskMulti(
         throw runtime_error("AADrisk() : Could not retrieve model and product");
     }
 
+    //  Returns a vector of values and a matrix of risks 
+    //      with payoffs in columns and parameters in rows
+    //      along with ids of payoffs and parameters
     RiskReports results;
 
     //  Random Number Generator
@@ -287,35 +256,35 @@ inline RiskReports AADriskMulti(
 
     //  Simulate
     const auto simulResults = num.parallel
-		? mcParallelSimulAADMulti(*product, *model, *rng, num.numPath)
+        ? mcParallelSimulAADMulti(*product, *model, *rng, num.numPath)
         : mcSimulAADMulti(*product, *model, *rng, num.numPath);
 
     results.params = model->parameterLabels();
     results.payoffs = product->payoffLabels();
-	results.risks = move(simulResults.risks);
+    results.risks = move(simulResults.risks);
 
-	//	Average values across paths
-	const size_t nPayoffs = product->payoffLabels().size();
-	results.values.resize(nPayoffs);
-	for (size_t i = 0; i < nPayoffs; ++i)
-	{
-		results.values[i] = accumulate(
-			simulResults.payoffs.begin(),
-			simulResults.payoffs.end(),
-			0.0,
-			[i](const double acc, const vector<double>& v) { return acc + v[i]; }
-		) / num.numPath;
-	}
+    //	Average values across paths
+    const size_t nPayoffs = product->payoffLabels().size();
+    results.values.resize(nPayoffs);
+    for (size_t i = 0; i < nPayoffs; ++i)
+    {
+        results.values[i] = accumulate(
+            simulResults.payoffs.begin(),
+            simulResults.payoffs.end(),
+            0.0,
+            [i](const double acc, const vector<double>& v) { return acc + v[i]; }
+        ) / num.numPath;
+    }
 
     return results;
 }
 
 //  Bump risk, itemized
 //  Same result format as AADriskMulti()
-inline RiskReports bumpRisk(
-    const string&           modelId,
-    const string&           productId,
-    const NumericalParam&   num)
+RiskReports bumpRisk(
+    const string& modelId,
+    const string& productId,
+    const NumericalParam& num)
 {
     auto* orig = getModel<double>(modelId);
     const Product<double>* product = getProduct<double>(productId);
@@ -325,16 +294,19 @@ inline RiskReports bumpRisk(
         throw runtime_error("bumpRisk() : Could not retrieve model and product");
     }
 
+    //  Returns a vector of values and a matrix of risks 
+     //      with payoffs in columns and parameters in rows
+     //      along with ids of payoffs and parameters
     RiskReports results;
 
     //  base values
     auto baseRes = value(*orig, *product, num);
     results.payoffs = baseRes.identifiers;
-	results.values = baseRes.values;
+    results.values = baseRes.values;
 
     //  make copy so we don't modify the model in memory
     auto model = orig->clone();
-    
+
     results.params = model->parameterLabels();
     const vector<double*> parameters = model->parameters();
     const size_t n = parameters.size(), m = results.payoffs.size();
@@ -362,12 +334,12 @@ inline RiskReports bumpRisk(
 //  Returns a struct with price, delta and vega matrix
 inline auto dupireAADRisk(
     //  model id
-    const string&           modelId,
+    const string& modelId,
     //  product id
-    const string&           productId,
-    const map<string, double>&   notionals,
+    const string& productId,
+    const map<string, double>& notionals,
     //  numerical parameters
-    const NumericalParam&   num)
+    const NumericalParam& num)
 {
     //  Check that the model is a Dupire
     const Model<Number>* model = getModel<Number>(modelId);
@@ -381,7 +353,7 @@ inline auto dupireAADRisk(
         throw runtime_error("dupireAADRisk() : Model not a Dupire");
     }
 
-    //  Results
+    //  Results price, delta and vega matrix
     struct
     {
         double value;
@@ -410,8 +382,7 @@ inline auto dupireAADRisk(
 }
 
 //  Returns spots, times and lVols in a struct
-inline auto
-dupireCalib(
+DupireCalibResults dupireCalib(
     //  The local vol grid
     //  The spots to include
     const vector<double>& inclSpots,
@@ -425,58 +396,53 @@ dupireCalib(
     //  'B'achelier, Black'S'choles or 'M'erton
     const double spot,
     const double vol,
-    const double jmpIntens = 0.0,
-    const double jmpAverage = 0.0,
-    const double jmpStd = 0.0)
+    const double jmpIntens,
+    const double jmpAverage,
+    const double jmpStd)
 {
     //  Create IVS
     MertonIVS ivs(spot, vol, jmpIntens, jmpAverage, jmpStd);
 
     //  Go
-    return dupireCalibrate(ivs, inclSpots, maxDs, inclTimes, maxDt);
+    auto calib = dupireCalibrate(ivs, inclSpots, maxDs, inclTimes, maxDt);
+    DupireCalibResults results;
+    results.times = calib.times;
+    results.spots = calib.spots;
+    results.lVols = calib.lVols;
+
+    return results;
 }
 
-//  Superbucket
-
-struct SuperbucketResults
-{
-    double value;
-    double delta;
-    vector<double> strikes;
-    vector<Time> mats;
-    matrix<double> vega;
-};
 
 //  Returns value, delta, strikes, maturities 
 //      and vega = derivatives to implied vols = superbucket
-inline auto
-    dupireSuperbucket(
+SuperbucketResults dupireSuperbucket(
     //  Model parameters that are not calibrated
     const double            spot,
     const double            maxDt,
     //  Product 
-    const string&           productId,
-    const map<string, double>&   notionals,
+    const string& productId,
+    const map<string, double>& notionals,
     //  The local vol grid
     //  The spots to include
-    const vector<double>&   inclSpots,
+    const vector<double>& inclSpots,
     //  Maximum space between spots
     const double            maxDs,
     //  The times to include, note NOT 0
-    const vector<Time>&     inclTimes,
+    const vector<Time>& inclTimes,
     //  Maximum space between times
     const double            maxDtVol,
     //  The IVS we calibrate to
     //  Risk view
-    const vector<double>&   strikes,
-    const vector<Time>&     mats,
+    const vector<double>& strikes,
+    const vector<Time>& mats,
     //  Merton params
     const double            vol,
     const double            jmpIntens,
     const double            jmpAverage,
     const double            jmpStd,
     //  Numerical parameters
-    const NumericalParam&   num)
+    const NumericalParam& num)
 {
     //  Results
     SuperbucketResults results;
@@ -487,14 +453,14 @@ inline auto
 
     //  Calibrate the model
     auto params = dupireCalib(
-        inclSpots, 
-        maxDs, 
-        inclTimes, 
-        maxDtVol, 
-        spot, 
-        vol, 
-        jmpIntens, 
-        jmpAverage, 
+        inclSpots,
+        maxDs,
+        inclTimes,
+        maxDtVol,
+        spot,
+        vol,
+        jmpIntens,
+        jmpAverage,
         jmpStd);
     const vector<double>& spots = params.spots;
     const vector<Time>& times = params.times;
@@ -518,21 +484,21 @@ inline auto
     tape->clear();
 
     //  Convert market inputs to numbers, put on tape
-            
+
     //  Create IVS
     MertonIVS ivs(spot, vol, jmpIntens, jmpAverage, jmpStd);
-    
+
     //  Risk view --> that is the AAD input
     //  Note: that puts the view on tape
     RiskView<Number> riskView(strikes, mats);
 
     //  Calibrate again, in AAD mode, make tape
     auto nParams = dupireCalibrate(
-        ivs, 
-        inclSpots, 
-        maxDs, 
-        inclTimes, 
-        maxDtVol, 
+        ivs,
+        inclSpots,
+        maxDs,
+        inclTimes,
+        maxDtVol,
         riskView);
     matrix<Number>& nLvols = nParams.lVols;
 
@@ -544,7 +510,7 @@ inline auto
             nLvols[i][j].adjoint() = microbucket[i][j];
         }
     }
-    
+
     //  Propagate
     Number::propagateAdjoints(prev(tape->end()), tape->begin());
 
@@ -554,11 +520,11 @@ inline auto
     results.strikes = strikes;
     results.mats = mats;
     results.vega.resize(riskView.rows(), riskView.cols());
-    transform(riskView.begin(), riskView.end(), results.vega.begin(), 
+    transform(riskView.begin(), riskView.end(), results.vega.begin(),
         [](const Number& n)
-    {
-        return n.adjoint();
-    });
+        {
+            return n.adjoint();
+        });
 
     //  Clear tape
     tape->clear();
@@ -571,34 +537,33 @@ inline auto
 
 //  Returns value, delta, strikes, maturities 
 //      and vega = derivatives to implied vols = superbucket
-inline auto
-    dupireSuperbucketBump(
-        //  Model parameters that are not calibrated
-        const double            spot,
-        const double            maxDt,
-        //  Product 
-        const string&           productId,
-        const map<string, double>&   notionals,
-        //  The local vol grid
-        //  The spots to include
-        const vector<double>&   inclSpots,
-        //  Maximum space between spots
-        const double            maxDs,
-        //  The times to include, note NOT 0
-        const vector<Time>&     inclTimes,
-        //  Maximum space between times
-        const double            maxDtVol,
-        //  The IVS we calibrate to
-        //  Risk view
-        const vector<double>&   strikes,
-        const vector<Time>&     mats,
-        //  Merton params
-        const double            vol,
-        const double            jmpIntens,
-        const double            jmpAverage,
-        const double            jmpStd,
-        //  Numerical parameters
-        const NumericalParam&   num)
+SuperbucketResults dupireSuperbucketBump(
+    //  Model parameters that are not calibrated
+    const double            spot,
+    const double            maxDt,
+    //  Product 
+    const string& productId,
+    const map<string, double>& notionals,
+    //  The local vol grid
+    //  The spots to include
+    const vector<double>& inclSpots,
+    //  Maximum space between spots
+    const double            maxDs,
+    //  The times to include, note NOT 0
+    const vector<Time>& inclTimes,
+    //  Maximum space between times
+    const double            maxDtVol,
+    //  The IVS we calibrate to
+    //  Risk view
+    const vector<double>& strikes,
+    const vector<Time>& mats,
+    //  Merton params
+    const double            vol,
+    const double            jmpIntens,
+    const double            jmpAverage,
+    const double            jmpStd,
+    //  Numerical parameters
+    const NumericalParam& num)
 {
     //  Results
     SuperbucketResults results;
@@ -620,7 +585,7 @@ inline auto
 
     //  Create model
     Dupire<double> model(spot, spots, times, lvols, maxDt);
-    
+
     //  Get product
     const Product<double>* product = getProduct<double>(productId);
 
