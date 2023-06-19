@@ -334,7 +334,7 @@ inline void dupireCalibMaturity(
 
 //  Returns a struct with spots, times and lVols
 template<class T = double>
-inline auto dupireCalib(
+inline auto dupireCalibrate(
         //  The IVS we calibrate to
         const IVS& ivs,
         //  The local vol grid

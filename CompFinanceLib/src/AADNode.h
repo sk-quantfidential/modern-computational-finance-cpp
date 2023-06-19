@@ -49,7 +49,7 @@ class Node
 
     //  Number of adjoints (results) to propagate, usually 1
     //  See chapter 14
-    static size_t   numAdj;
+    __declspec(dllexport) static size_t   numAdj;
 
     //  Number of childs (arguments)
     const size_t    n;

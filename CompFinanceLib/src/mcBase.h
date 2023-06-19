@@ -20,6 +20,7 @@ As long as this comment is preserved at the top of the file
 //  All the base classes and template algorithms
 //  See chapters 6, 7, 12 and 14
 
+#include "globals.hpp"
 #include "AAD.h"
 
 #include <vector>
@@ -34,8 +35,6 @@ using namespace std;
 #include "matrix.h"
 #include "ThreadPool.h"
 
-using Time = double;
-extern Time systemTime;
 
 //  Scenarios
 //  =========

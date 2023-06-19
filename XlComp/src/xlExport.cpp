@@ -1580,6 +1580,8 @@ LPXLOPER12 pyImportModule(
         }
         Py_DECREF(pName);
         Py_DECREF(pModule);
+
+        xlReturn = TempStr12(module_name.c_str());
     }
     catch (const exception&)
     {

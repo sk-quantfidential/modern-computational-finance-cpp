@@ -27,7 +27,8 @@
     <ClInclude Include="src\analytics.h" />
     <ClInclude Include="src\blocklist.h" />
     <ClInclude Include="src\ConcurrentQueue.h" />
-    <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\exports.hpp" />
+    <ClInclude Include="src\globals.hpp" />
     <ClInclude Include="src\gaussians.h" />
     <ClInclude Include="src\interp.h" />
     <ClInclude Include="src\ivs.h" />
@@ -48,10 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AAD.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mcBase.cpp" />
     <ClCompile Include="src\MemoryManager.cpp" />
     <ClCompile Include="src\MemoryPool.cpp" />
     <ClCompile Include="src\sobol.cpp" />
+    <ClCompile Include="src\store.cpp" />
     <ClCompile Include="src\ThreadPool.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

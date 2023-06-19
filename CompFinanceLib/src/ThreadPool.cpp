@@ -14,6 +14,16 @@ As long as this comment is preserved at the top of the file
 */
 
 #include "ThreadPool.h"
+#include "exports.hpp"
+
+__declspec(dllexport)
+void __stdcall restartThreadPool(
+    const int   numThread)
+{
+    // Todo: restartThreadPool(numThread);
+    ThreadPool::getInstance()->stop();
+    ThreadPool::getInstance()->start(numThread);
+}
 
 //  Statics
 ThreadPool ThreadPool::myInstance;

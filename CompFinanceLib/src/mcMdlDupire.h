@@ -19,6 +19,7 @@ As long as this comment is preserved at the top of the file
 #pragma once
 #pragma warning(disable : 4018)
 
+#include "main.h"
 #include "matrix.h"
 #include "interp.h"
 #include "utility.h"
@@ -334,7 +335,7 @@ inline void dupireCalibMaturity(
 
 //  Returns a struct with spots, times and lVols
 template<class T = double>
-inline auto dupireCalib(
+inline auto dupireCalibrate(
         //  The IVS we calibrate to
         const IVS& ivs,
         //  The local vol grid
@@ -353,9 +354,9 @@ inline auto dupireCalib(
     //  Results
     struct
     {
-        vector<double> spots;
-        vector<Time> times;
-        matrix<T> lVols;
+        std::vector<double>         spots;
+        std::vector<Time>           times;
+        matrix<T>                   lVols;
     } results;
 
     //  Spots and times

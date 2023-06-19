@@ -35,6 +35,7 @@ As long as this comment is preserved at the top of the file
 
 #include <memory>
 
+
 //  Routines for multi-dimensional AAD (chapter 14)
 //  Set static context for multi-dimensional AAD
 
@@ -73,3 +74,4 @@ inline void convertCollection(It1 srcBegin, It1 srcEnd, It2 destBegin)
     transform(srcBegin, srcEnd, destBegin, 
         [](const auto& source) { return destType(source); });
 }
+

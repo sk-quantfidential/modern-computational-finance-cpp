@@ -19,9 +19,6 @@ As long as this comment is preserved at the top of the file
 //  Memory storage for models and products,
 //  See chapter 6
 
-#ifndef __STORE_EXPORT_H
-#define __STORE_EXPORT_H
-
 #ifdef USEPROJECTLIBRARY
 #ifdef  PROJECTLIBRARY_EXPORTS 
 #define PROJECTAPI __declspec(dllexport)
@@ -31,10 +28,32 @@ As long as this comment is preserved at the top of the file
 #else
 #define PROJECTAPI
 #endif
+///***************************************************************************
+// File:        store.H
+//
+// Purpose:     Header file for functions to store parameters
+//
+// Platform:    Microsoft Windows
+//
+// Comments:
+//
+///***************************************************************************
 
+
+
+#define rwMaxO8			(65536)
+#define colMaxO8		(256)
+#define cchMaxStz		(255)
+#define MAXSHORTINT		0x7fff
+
+// 
+// Function prototypes
+//
+
+#include <string> 
 
 #include "mcBase.h"
-#include "mcMdl.h"
+#include "mcMdlDupire.h"
 #include "mcPrd.h"
 #include <unordered_map>
 #include <memory>
@@ -48,7 +67,7 @@ unordered_map<string, pair<unique_ptr<Product<double>>, unique_ptr<Product<Numbe
 ModelStore modelStore;
 ProductStore productStore;
 
-PROJECTAPI
+/*PROJECTAPI
 void __stdcall putBlackScholes(
     const double            spot,
     const double            vol,
@@ -85,7 +104,7 @@ void __stdcall putDupire(
 
     //  And move them into the map
     modelStore[store] = make_pair(move(mdl), move(riskMdl));
-}
+}*/
 
 template<class T>
 const Model<T>* getModel(const string& store);
@@ -117,6 +136,7 @@ pair<const vector<string>*, const vector<double*>*> getModelParameters(const str
     }
 }
 
+/*
 PROJECTAPI
 void __stdcall putEuropean(
     const double            strike,
@@ -154,7 +174,6 @@ void __stdcall putBarrier(
     //  And move them into the map
     productStore[store] = make_pair(move(prd), move(riskPrd));
 }
-
 PROJECTAPI
 void putContingent(
     const double            coupon,
@@ -174,6 +193,7 @@ void putContingent(
     //  And move them into the map
     productStore[store] = make_pair(move(prd), move(riskPrd));
 }
+
 
 void putEuropeans(
     //  maturities must be given in increasing order
@@ -196,7 +216,7 @@ void putEuropeans(
 
     //  And move them into the map
     productStore[store] = make_pair(move(prd), move(riskPrd));
-}
+}*/
 
 template<class T>
 const Product<T>* getProduct(const string& store);
@@ -221,8 +241,6 @@ const vector<string>* getPayoffLabels(const string& store)
 {
     auto it = productStore.find(store);
     if (it == productStore.end()) return nullptr;
-    else return & it->second.first.get()->payoffLabels();
+    else return &it->second.first.get()->payoffLabels();
 
 }
-
-#endif
